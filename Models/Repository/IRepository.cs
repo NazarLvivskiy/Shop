@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Models.Repository
 {
-    interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity> where TEntity : class
     {
         //POST
         void Create(TEntity entity);
