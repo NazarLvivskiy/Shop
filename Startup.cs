@@ -29,13 +29,15 @@ namespace Shop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
+
+            services.AddControllers();
+
             string connection = Configuration.GetConnectionString("MSSQL");
             // добавляем контекст MobileContext в качестве сервиса в приложение
             services.AddDbContext<ShopContext>(options =>
                 options.UseSqlServer(connection));
-
-            services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
-            services.AddControllers();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shop", Version = "v1" });

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,19 +8,34 @@ namespace Shop.Models.Repository
 {
     public class EFRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        public void Create(TEntity entity)
+        ShopContext Context;
+
+        DbSet<TEntity> entities;
+
+        public EFRepository(ShopContext shopContext)
         {
-            throw new NotImplementedException();
+            Context = shopContext;
+
+            entities = Context.Set<TEntity>();
         }
 
-        public void Delete(int id)
+        public void Create(TEntity entity)
         {
-            throw new NotImplementedException();
+            entities.Add(entity);
+
+            Context.SaveChanges();
+        }
+
+        public void Delete(Guid id)
+        {
+            entities.Remove(GetForId(id));
+
+            Context.SaveChanges();
         }
 
         public ICollection<TEntity> GetAllEntities()
         {
-            throw new NotImplementedException();
+            return entities.ToList();
         }
 
         public ICollection<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate)
@@ -27,14 +43,16 @@ namespace Shop.Models.Repository
             throw new NotImplementedException();
         }
 
-        public TEntity GetForId(int id)
+        public TEntity GetForId(Guid id)
         {
-            throw new NotImplementedException();
+            return entities.Find(id);
         }
 
-        public void Updata(TEntity entity)
+        public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            entities.Update(entity);
+
+            Context.SaveChanges();
         }
     }
 }

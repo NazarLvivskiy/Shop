@@ -17,12 +17,12 @@ namespace Shop.Models.Repository
         ICollection<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate);
 
         //GET
-        TEntity GetForId(int id);
+        TEntity GetForId(Guid id);
 
         //PUT
-        void Updata(TEntity entity);
+        void Update(TEntity entity);
 
         //DELETE
-        void Delete(int id);
+        void Delete(Guid id);
     }
 }

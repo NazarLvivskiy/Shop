@@ -7,13 +7,13 @@ namespace Shop.Models
 {
     public class Phone
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
         public decimal Price { get; set; }
 
-        public ICollection<Image> Images { get; set; }
+        public ICollection<Image> Images { get; set; } = new List<Image>();
 
         public string Camera { get; set; }
 
@@ -24,5 +24,7 @@ namespace Shop.Models
         public string Chip { get; set; }
 
         public string RAM { get; set; }
+
+        public Brand Brand { get; set; }
     }
 }
