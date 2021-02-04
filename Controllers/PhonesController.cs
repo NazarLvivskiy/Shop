@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Models;
 using Shop.Models.Repository;
@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace Shop.Controllers
 {
-    
     [Route("api/[controller]")]
     [ApiController]
     public class PhonesController : ControllerBase
@@ -22,44 +21,79 @@ namespace Shop.Controllers
             db = repository;
         }
 
+        
         [HttpGet]
         public ActionResult<ICollection<Phone>> GetAll()
         {
-            return db.GetAllEntities().ToList();
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+            var phones = db.GetAllEntities().ToList();
+
+            if (phones.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(phones);
         }
 
         [HttpGet("{id}")]
         public ActionResult<Phone> GetForId(Guid id)
         {
-            return db.GetForId(id);
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+            var phone = db.GetForId(id);
+
+            if (phone == null)
+            {
+                return NotFound(new Error { Code = 404, Message =" Phone not found", Details = "Cannot find phone with id: " + id });
+            }
+
+            return Ok(phone);
         }
 
         [HttpPost]
         public ActionResult<Phone> Post(Phone phone)
         {
-            if (phone == null)
+            if (User.Identity.IsAuthenticated == false)
             {
-                return BadRequest();
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+            else if (phone == null)
+            {
+                return BadRequest(new Error { Code = 400, Message = "Bad request", Details = "nullable value or incorrect type" });
+            }
+            else if (typeof(Phone) != phone.GetType())
+            {
+                return UnprocessableEntity(new Error { Code = 1050, Message = "Invalid data", Details = "invalid location field in incoming object" });
             }
 
             db.Create(phone);
 
-            return Ok();
+            return Created("Created", phone);
         }
 
         [HttpPut]
-        public ActionResult<Phone> Put(Phone phone)
+        public async Task<ActionResult<Phone>> Put(Phone phone)
         {
-            if (phone == null)
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+            else if (phone == null)
             {
                 return BadRequest();
             }
             if (!db.GetAllEntities().Any(x => x.Id == phone.Id))
             {
-                return NotFound();
+                return NotFound(new Error { Code = 404, Message = " Phone not found", Details = "Cannot find phone with id: " + phone.Id });
             }
 
-            db.Update(phone);
+            await db.Update(phone);
 
             return Ok(phone);
         }
@@ -68,16 +102,21 @@ namespace Shop.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Phone> Delete(Guid id)
         {
-            var phone = db.GetAllEntities().FirstOrDefault(x => x.Id == id);
-           
-            if (phone == null)
+            if (User.Identity.IsAuthenticated == false)
             {
-                return NotFound();
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
             }
+
+            if (!db.GetAllEntities().Any(x => x.Id == id))
+            {
+                return NotFound(new Error { Code = 404, Message = " Phone not found", Details = "Cannot find and delete this phone with id: " + id });
+            }
+
+            var phone = db.GetForId(id);
 
             db.Delete(id);
             
-            return Ok(phone);
+            return NoContent();
         }
     }
 }

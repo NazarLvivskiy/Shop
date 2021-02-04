@@ -20,7 +20,7 @@ namespace Shop.Models.Repository
         TEntity GetForId(Guid id);
 
         //PUT
-        void Update(TEntity entity);
+        Task Update(TEntity entity);
 
         //DELETE
         void Delete(Guid id);

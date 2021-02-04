@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +25,8 @@ namespace Shop.Models
         public string Chip { get; set; }
 
         public string RAM { get; set; }
+
+        public Guid? BrandId { get; set; }
 
         public Brand Brand { get; set; }
     }

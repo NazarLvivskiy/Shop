@@ -15,6 +15,8 @@ namespace Shop.Models.Repository
         public EFRepository(ShopContext shopContext)
         {
             Context = shopContext;
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //
 
             entities = Context.Set<TEntity>();
         }
@@ -48,11 +50,10 @@ namespace Shop.Models.Repository
             return entities.Find(id);
         }
 
-        public void Update(TEntity entity)
+        public async Task Update(TEntity entity)
         {
-            entities.Update(entity);
-
-            Context.SaveChanges();
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
         }
     }
 }

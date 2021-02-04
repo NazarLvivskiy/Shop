@@ -15,7 +15,7 @@ namespace Shop.Models
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
     }

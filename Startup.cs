@@ -31,6 +31,8 @@ namespace Shop
         {
             services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
 
+            
+
             services.AddControllers();
 
             string connection = Configuration.GetConnectionString("MSSQL");
