@@ -29,5 +29,7 @@ namespace Shop.Models
         public Guid? BrandId { get; set; }
 
         public Brand Brand { get; set; }
+
+        public int? CapacityBattery { get; set; }
     }
 }

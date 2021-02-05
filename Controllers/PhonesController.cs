@@ -21,7 +21,7 @@ namespace Shop.Controllers
             db = repository;
         }
 
-        
+
         [HttpGet]
         public ActionResult<ICollection<Phone>> GetAll()
         {
@@ -50,7 +50,7 @@ namespace Shop.Controllers
 
             if (phone == null)
             {
-                return NotFound(new Error { Code = 404, Message =" Phone not found", Details = "Cannot find phone with id: " + id });
+                return NotFound(new Error { Code = 404, Message = " Phone not found", Details = "Cannot find phone with id: " + id });
             }
 
             return Ok(phone);
@@ -112,10 +112,8 @@ namespace Shop.Controllers
                 return NotFound(new Error { Code = 404, Message = " Phone not found", Details = "Cannot find and delete this phone with id: " + id });
             }
 
-            var phone = db.GetForId(id);
-
             db.Delete(id);
-            
+
             return NoContent();
         }
     }

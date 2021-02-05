@@ -30,6 +30,8 @@ namespace Shop.Models.Repository
 
         public void Delete(Guid id)
         {
+            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
             entities.Remove(GetForId(id));
 
             Context.SaveChanges();
