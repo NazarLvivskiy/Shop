@@ -15,6 +15,6 @@ namespace Shop.Models
 
         public Image Image { get; set; }
 
-        public ICollection<Phone> Phones { get; set; } = new List<Phone>();
+        public virtual IList<Phone> Phones { get; set; } = new List<Phone>();
     }
 }

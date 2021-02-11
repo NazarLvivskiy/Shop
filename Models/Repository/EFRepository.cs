@@ -10,12 +10,13 @@ namespace Shop.Models.Repository
     {
         ShopContext Context;
 
+        
+
         DbSet<TEntity> entities;
 
         public EFRepository(ShopContext shopContext)
         {
             Context = shopContext;
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             //
 
             entities = Context.Set<TEntity>();
@@ -30,19 +31,18 @@ namespace Shop.Models.Repository
 
         public void Delete(Guid id)
         {
-            Context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
 
             entities.Remove(GetForId(id));
 
             Context.SaveChanges();
         }
 
-        public ICollection<TEntity> GetAllEntities()
+        public IList<TEntity> GetAllEntities()
         {
             return entities.ToList();
         }
 
-        public ICollection<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate)
+        public IList<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate)
         {
             throw new NotImplementedException();
         }
@@ -52,9 +52,12 @@ namespace Shop.Models.Repository
             return entities.Find(id);
         }
 
-        public async Task Update(TEntity entity)
+        public async Task Update(TEntity entity, Guid id)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            Delete(id);
+
+            Create(entity);
+
             await Context.SaveChangesAsync();
         }
     }

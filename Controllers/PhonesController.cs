@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Controllers
 {
+    //WORK
     [Route("api/[controller]")]
     [ApiController]
     public class PhonesController : ControllerBase
@@ -93,7 +94,7 @@ namespace Shop.Controllers
                 return NotFound(new Error { Code = 404, Message = " Phone not found", Details = "Cannot find phone with id: " + phone.Id });
             }
 
-            await db.Update(phone);
+            await db.Update(phone, phone.Id);
 
             return Ok(phone);
         }

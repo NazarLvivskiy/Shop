@@ -1,7 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Shop.Models
@@ -14,7 +16,7 @@ namespace Shop.Models
 
         public decimal Price { get; set; }
 
-        public ICollection<Image> Images { get; set; } = new List<Image>();
+        public IList<Image> Images { get; set; } = new List<Image>();
 
         public string Camera { get; set; }
 
@@ -26,9 +28,10 @@ namespace Shop.Models
 
         public string RAM { get; set; }
 
-        public Guid? BrandId { get; set; }
+        public virtual Guid? BrandId { get; set; }
 
-        public Brand Brand { get; set; }
+        [JsonIgnore]
+        public virtual Brand Brand { get; set; }
 
         public int? CapacityBattery { get; set; }
     }

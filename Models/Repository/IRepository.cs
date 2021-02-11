@@ -11,16 +11,16 @@ namespace Shop.Models.Repository
         void Create(TEntity entity);
 
         //GET
-        ICollection<TEntity> GetAllEntities();
+        IList<TEntity> GetAllEntities();
 
         //GET
-        ICollection<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate);
+        IList<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate);
 
         //GET
         TEntity GetForId(Guid id);
 
         //PUT
-        Task Update(TEntity entity);
+        Task Update(TEntity entity, Guid id);
 
         //DELETE
         void Delete(Guid id);

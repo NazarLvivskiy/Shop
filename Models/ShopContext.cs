@@ -15,15 +15,16 @@ namespace Shop.Models
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {
-           // Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Phone>()
-                .HasOne(p => p.Brand)
-                .WithMany(t => t.Phones)
+            modelBuilder.Entity<Brand>()
+                .HasMany<Phone>(b => b.Phones)
+                .WithOne(p=>p.Brand)
+                .HasForeignKey(b=>b.BrandId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

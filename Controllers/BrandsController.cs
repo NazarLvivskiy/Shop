@@ -15,9 +15,13 @@ namespace Shop.Controllers
     {
         IRepository<Brand> db;
 
-        public BrandsController(IRepository<Brand> repository)
+        IRepository<Phone> phonesRepository;
+
+        public BrandsController(IRepository<Brand> repository, IRepository<Phone> repository1)
         {
             db = repository;
+
+            phonesRepository = repository1;
         }
 
         [HttpGet]
@@ -74,27 +78,7 @@ namespace Shop.Controllers
 
             return Created("Created", brand);
         }
-
-        [HttpPut]
-        public async Task<ActionResult<Brand>> Put(Brand brand)
-        {
-            if (User.Identity.IsAuthenticated == false)
-            {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
-            else if (brand == null)
-            {
-                return BadRequest();
-            }
-            if (!db.GetAllEntities().Any(x => x.Id == brand.Id))
-            {
-                return NotFound(new Error { Code = 404, Message = " Brand not found", Details = "Cannot find brand with id: " + brand.Id });
-            }
-
-            await db.Update(brand);
-
-            return Ok(brand);
-        }
+        
 
         // DELETE api/users/5
         [HttpDelete("{id}")]
@@ -109,14 +93,6 @@ namespace Shop.Controllers
             {
                 return NotFound(new Error { Code = 404, Message = "Brand not found", Details = "Cannot find and delete this brand with id: " + id });
             }
-
-            var phones = db.GetForId(id).Phones;
-
-            for (int i = 0; i < phones.Count; i++)
-            {
-
-            }
-
 
 
             db.Delete(id);

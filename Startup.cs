@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Shop
 {
@@ -29,11 +30,12 @@ namespace Shop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient(typeof(IRepository<>), typeof(EFRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EFRepository<>));
 
-            
 
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+        
 
             string connection = Configuration.GetConnectionString("MSSQL");
             // добавляем контекст MobileContext в качестве сервиса в приложение
