@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -11,14 +12,17 @@ namespace Shop.Models
     {
         public Guid Id { get; set; }
 
+        [Required(ErrorMessage = "Phone Name is required")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "Phone Price is required")]
         public decimal Price { get; set; }
 
         public IList<Image> Images { get; set; } = new List<Image>();
 
         public string Camera { get; set; }
 
+        [Required(ErrorMessage = "Phone Display is required")]
         public float Display { get; set; }
 
         public string Capacity { get; set; }
