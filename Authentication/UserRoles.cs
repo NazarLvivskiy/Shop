@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Shop.Authentication
 {
-    public class Response
+    public class UserRoles
     {
-        public string Status { get; set; }
-        public string Message { get; set; }
+        public const string Admin = "Admin";
+        public const string User = "User";
     }
 }

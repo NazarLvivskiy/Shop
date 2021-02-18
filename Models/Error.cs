@@ -13,5 +13,9 @@ namespace Shop.Models
 
         public string Details { get; set; }
 
+        public override string ToString()
+        {
+            return Details;
+        }
     }
 }

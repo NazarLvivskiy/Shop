@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Authentication;
 using Shop.Models;
 using Shop.Models.Repository;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Shop.Controllers
 {
     //WORK
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class PhonesController : ControllerBase
@@ -42,6 +43,7 @@ namespace Shop.Controllers
             return Ok(phones);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public ActionResult<ICollection<Phone>> GetAll()
         {
@@ -76,6 +78,7 @@ namespace Shop.Controllers
             return Ok(phone);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public ActionResult<Phone> Post(Phone phone)
         {
@@ -89,7 +92,7 @@ namespace Shop.Controllers
             }
             else if (typeof(Phone) != phone.GetType())
             {
-                return UnprocessableEntity(new Error { Code = 1050, Message = "Invalid data", Details = "invalid location field in incoming object" });
+                return UnprocessableEntity(new Error { Code = 422, Message = "Invalid data", Details = "invalid location field in incoming object" });
             }
 
             db.Create(phone);
@@ -97,6 +100,7 @@ namespace Shop.Controllers
             return Created("Created", phone);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPut]
         public async Task<ActionResult<Phone>> Put(Phone phone)
         {
@@ -119,6 +123,7 @@ namespace Shop.Controllers
         }
 
         // DELETE api/users/5
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete("{id}")]
         public ActionResult<Phone> Delete(Guid id)
         {

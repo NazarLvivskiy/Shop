@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shop.Authentication;
 using Shop.Models;
 using Shop.Models.Repository;
 using System;
@@ -8,22 +9,19 @@ using System.Linq;
 
 namespace Shop.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class BrandsController : ControllerBase
     {
         IRepository<Brand> db;
 
-        IRepository<Phone> phonesRepository;
-
-        public BrandsController(IRepository<Brand> repository, IRepository<Phone> repository1)
+        public BrandsController(IRepository<Brand> repository)
         {
             db = repository;
-
-            phonesRepository = repository1;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public ActionResult<ICollection<Brand>> GetAll()
         {
@@ -32,6 +30,25 @@ namespace Shop.Controllers
                 return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
             }
             var brands = db.GetAllEntities().ToList();
+
+            if (brands.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(brands);
+        }
+
+        [HttpGet]
+        [Route("paging")]
+        public ActionResult GetPhones([FromQuery] PaginationParameters pagination)
+        {
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+
+            var brands = db.GetEntitiesForFilter(pagination);
 
             if (brands.Count == 0)
             {
@@ -58,6 +75,7 @@ namespace Shop.Controllers
             return Ok(brand);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public ActionResult<Brand> Post(Brand brand)
         {
@@ -78,8 +96,8 @@ namespace Shop.Controllers
 
             return Created("Created", brand);
         }
-        
 
+        [Authorize(Roles = UserRoles.Admin)]
         // DELETE api/users/5
         [HttpDelete("{id}")]
         public ActionResult<Brand> Delete(Guid id)
