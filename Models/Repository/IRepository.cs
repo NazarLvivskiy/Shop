@@ -14,7 +14,7 @@ namespace Shop.Models.Repository
         IList<TEntity> GetAllEntities();
 
         //GET
-        IList<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate);
+        IList<TEntity> GetEntitiesForFilter(PaginationParameters pagination);
 
         //GET
         TEntity GetForId(Guid id);

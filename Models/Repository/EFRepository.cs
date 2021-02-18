@@ -42,9 +42,12 @@ namespace Shop.Models.Repository
             return entities.ToList();
         }
 
-        public IList<TEntity> GetEntitiesForFilter(Predicate<TEntity> predicate)
+        public IList<TEntity> GetEntitiesForFilter(PaginationParameters pagination)
         {
-            throw new NotImplementedException();
+            return GetAllEntities()
+                .Skip((pagination.PageNumber - 1) * pagination.PageSize)
+                .Take(pagination.PageSize)
+                .ToList();
         }
 
         public TEntity GetForId(Guid id)
