@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Shop.Controllers
 {
     //WORK
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PhonesController : ControllerBase
