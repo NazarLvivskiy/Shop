@@ -23,6 +23,24 @@ namespace Shop.Controllers
             db = repository;
         }
 
+        [HttpGet]
+        [Route("paging")]
+        public ActionResult GetPhones([FromQuery] PaginationParameters pagination)
+        {
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
+            }
+
+            var phones = db.GetEntitiesForFilter(pagination);
+
+            if (phones.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return Ok(phones);
+        }
 
         [HttpGet]
         public ActionResult<ICollection<Phone>> GetAll()
