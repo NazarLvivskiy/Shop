@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Shop.Authentication;
+using Shop.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -63,7 +64,7 @@ namespace Shop.Controllers
                     expiration = token.ValidTo
                 });
             }
-            return Unauthorized();
+            return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "Uncorrected password or userName!" });
         }
 
         [HttpPost]
