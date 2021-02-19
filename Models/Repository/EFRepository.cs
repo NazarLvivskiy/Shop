@@ -10,8 +10,6 @@ namespace Shop.Models.Repository
     {
         ShopContext Context;
 
-        
-
         DbSet<TEntity> entities;
 
         public EFRepository(ShopContext shopContext)
