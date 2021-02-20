@@ -25,10 +25,6 @@ namespace Shop.Controllers
         [HttpGet]
         public ActionResult<ICollection<Brand>> GetAll()
         {
-            if (User.Identity.IsAuthenticated == false)
-            {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
             var brands = db.GetAllEntities().ToList();
 
             if (brands.Count == 0)
@@ -41,13 +37,8 @@ namespace Shop.Controllers
 
         [HttpGet]
         [Route("paging")]
-        public ActionResult GetPhones([FromQuery] PaginationParameters pagination)
+        public ActionResult<ICollection<Brand>> GetBrands([FromQuery] PaginationParameters pagination)
         {
-            if (User.Identity.IsAuthenticated == false)
-            {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
-
             var brands = db.GetEntitiesForFilter(pagination);
 
             if (brands.Count == 0)
@@ -61,15 +52,16 @@ namespace Shop.Controllers
         [HttpGet("{id}")]
         public ActionResult<Brand> GetForId(Guid id)
         {
-            if (User.Identity.IsAuthenticated == false)
-            {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
             var brand = db.GetForId(id);
 
             if (brand == null)
             {
-                return NotFound(new Error { Code = 404, Message = " Brand not found", Details = "Cannot find brand with id: " + id });
+                return NotFound(
+                    new Error { 
+                        Code = 404, 
+                        Message = " Brand not found", 
+                        Details = "Cannot find brand with id: " + id 
+                    });
             }
 
             return Ok(brand);
@@ -79,17 +71,23 @@ namespace Shop.Controllers
         [HttpPost]
         public ActionResult<Brand> Post(Brand brand)
         {
-            if (User.Identity.IsAuthenticated == false)
+            if (brand == null)
             {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
-            else if (brand == null)
-            {
-                return BadRequest(new Error { Code = 400, Message = "Bad request", Details = "nullable value or incorrect type" });
+                return BadRequest(
+                    new Error { 
+                        Code = 400, 
+                        Message = "Bad request", 
+                        Details = "nullable value or incorrect type" 
+                    });
             }
             else if (typeof(Brand) != brand.GetType())
             {
-                return UnprocessableEntity(new Error { Code = 1050, Message = "Invalid data", Details = "invalid location field in incoming object" });
+                return UnprocessableEntity(
+                    new Error { 
+                        Code = 1050, 
+                        Message = "Invalid data", 
+                        Details = "invalid location field in incoming object" 
+                    });
             }
 
             db.Create(brand);
@@ -98,20 +96,18 @@ namespace Shop.Controllers
         }
 
         [Authorize(Roles = UserRoles.Admin)]
-        // DELETE api/users/5
         [HttpDelete("{id}")]
         public ActionResult<Brand> Delete(Guid id)
         {
-            if (User.Identity.IsAuthenticated == false)
-            {
-                return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "User is unauthorized" });
-            }
-
             if (!db.GetAllEntities().Any(x => x.Id == id))
             {
-                return NotFound(new Error { Code = 404, Message = "Brand not found", Details = "Cannot find and delete this brand with id: " + id });
+                return NotFound(
+                    new Error { 
+                        Code = 404, 
+                        Message = "Brand not found", 
+                        Details = "Cannot find and delete this brand with id: " + id 
+                    });
             }
-
 
             db.Delete(id);
 

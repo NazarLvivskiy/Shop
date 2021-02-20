@@ -20,13 +20,17 @@ namespace Shop.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
+
         private readonly RoleManager<IdentityRole> roleManager;
+
         private readonly IConfiguration _configuration;
 
         public AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             this.userManager = userManager;
+
             _configuration = configuration;
+
             this.roleManager = roleManager;
         }
 
@@ -35,6 +39,7 @@ namespace Shop.Controllers
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
+
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
             {
                 var userRoles = await userManager.GetRolesAsync(user);
@@ -42,6 +47,7 @@ namespace Shop.Controllers
                 var authClaims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
@@ -66,7 +72,11 @@ namespace Shop.Controllers
                     expiration = token.ValidTo
                 });
             }
-            return Unauthorized(new Error { Code = 401, Message = "Unauthorized", Details = "Uncorrected password or userName!" });
+            return Unauthorized(new 
+                Error { Code = 401, 
+                Message = "Unauthorized", 
+                Details = "Uncorrected password or userName!" 
+            });
         }
 
         [HttpPost]
@@ -74,8 +84,11 @@ namespace Shop.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
+
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Error { Code = 500, Message = "Error", Details = "User already exists!" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    new Error { Code = 500, Message = "Error", Details = "User already exists!" });
 
             ApplicationUser user = new ApplicationUser()
             {
@@ -83,11 +96,20 @@ namespace Shop.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
-            var result = await userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Error { Code = 500, Message = "Error", Details = "User creation failed! Please check user details and try again." });
 
-            return Ok(new Error { Code = 200, Message = "Success", Details = "User created successfully!" });
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError, 
+                    new Error { 
+                        Code = 500, 
+                        Message = "Error", 
+                        Details = "User creation failed! Please check user details and try again."
+                    });
+
+            return Ok(new 
+                Error { Code = 200, Message = "Success", Details = "User created successfully!" });
         }
 
         [HttpPost]
@@ -95,8 +117,15 @@ namespace Shop.Controllers
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             var userExists = await userManager.FindByNameAsync(model.Username);
+
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Error { Code = 500, Message = "Error", Details = "User already exists!" });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError, 
+                    new Error { 
+                        Code = 500, 
+                        Message = "Error", 
+                        Details = "User already exists!" 
+                    });
 
             ApplicationUser user = new ApplicationUser()
             {
@@ -104,12 +133,21 @@ namespace Shop.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+
             var result = await userManager.CreateAsync(user, model.Password);
+
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Error { Code = 500, Message = "Error", Details = "User creation failed! Please check user details and try again." });
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError, 
+                    new Error { 
+                        Code = 500, 
+                        Message = "Error", 
+                        Details = "User creation failed! Please check user details and try again."
+                    });
 
             if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+
             if (!await roleManager.RoleExistsAsync(UserRoles.User))
                 await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
 
@@ -118,7 +156,12 @@ namespace Shop.Controllers
                 await userManager.AddToRoleAsync(user, UserRoles.Admin);
             }
 
-            return Ok(new Error { Code = 200, Message = "Success", Details = "User created successfully!" });
+            return Ok(
+                new Error { 
+                    Code = 200, 
+                    Message = "Success", 
+                    Details = "User created successfully!" 
+                });
         }
     }
 }
