@@ -36,7 +36,7 @@ namespace Shop.Controllers
             return Ok(phones);
         }
 
-        //[Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet]
         public ActionResult<ICollection<Phone>> GetAll()
         {
@@ -70,7 +70,7 @@ namespace Shop.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
-        public ActionResult<Phone> Post(Phone phone)
+        public ActionResult<Phone> Add(Phone phone)
         {
             if (phone == null)
             {
@@ -81,15 +81,6 @@ namespace Shop.Controllers
                         Details = "nullable value or incorrect type" 
                     });
             }
-            else if (typeof(Phone) != phone.GetType())
-            {
-                return UnprocessableEntity(
-                    new Error { 
-                        Code = 422, 
-                        Message = "Invalid data", 
-                        Details = "invalid location field in incoming object" 
-                    });
-            }
 
             db.Create(phone);
 
@@ -98,11 +89,17 @@ namespace Shop.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPut]
-        public async Task<ActionResult<Phone>> Put(Phone phone)
+        public async Task<ActionResult<Phone>> Update(Phone phone)
         {
             if (phone == null)
             {
-                return BadRequest();
+                return BadRequest(
+                     new Error
+                     {
+                         Code = 400,
+                         Message = "Bad request",
+                         Details = "nullable value or incorrect type"
+                     });
             }
 
             if (!db.GetAllEntities().Any(x => x.Id == phone.Id))
