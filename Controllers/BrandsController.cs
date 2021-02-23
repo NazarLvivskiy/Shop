@@ -69,7 +69,7 @@ namespace Shop.Controllers
 
         [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
-        public ActionResult<Brand> Post(Brand brand)
+        public ActionResult<Brand> Add(Brand brand)
         {
             if (brand == null)
             {
