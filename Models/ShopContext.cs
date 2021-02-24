@@ -12,6 +12,8 @@ namespace Shop.Models
 
         public DbSet<Brand> Brands { get; set; }
 
+        
+
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {

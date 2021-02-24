@@ -10,8 +10,12 @@ namespace Shop.Models
     {
         public Guid Id { get; set; }
 
+        public Guid UserId { get; set; }    
+
         public ApplicationUser User { get; set; }
 
-        public Dictionary<Phone,int> Pairs { get; set; }
+        public List<Product> Products { get; set; }
+
+        public double TotalSum { get; set; }    
     }
 }

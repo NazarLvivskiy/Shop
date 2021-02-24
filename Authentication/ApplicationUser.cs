@@ -9,6 +9,7 @@ namespace Shop.Authentication
 {
     public class ApplicationUser: IdentityUser
     {
+        public string Image { get; set; }
 
         public Guid CartId { get; set; }
 
