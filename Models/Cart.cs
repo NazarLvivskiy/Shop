@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shop.Models
 {
-    public class Cash
+    public class Cart
     {
         public Guid Id { get; set; }
 

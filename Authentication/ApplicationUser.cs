@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Shop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,5 +9,9 @@ namespace Shop.Authentication
 {
     public class ApplicationUser: IdentityUser
     {
+
+        public Guid CartId { get; set; }
+
+        public Cart Cart { get; set; }
     }
 }
