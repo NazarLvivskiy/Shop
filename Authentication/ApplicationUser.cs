@@ -3,6 +3,7 @@ using Shop.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Shop.Authentication
@@ -11,8 +12,9 @@ namespace Shop.Authentication
     {
         public string Image { get; set; }
 
-        public Guid CartId { get; set; }
+        public Guid? CartId { get; set; }
 
-        public Cart Cart { get; set; }
+        [JsonIgnore]
+        public Cart Cart { get; set; } = new Cart();
     }
 }

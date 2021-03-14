@@ -158,7 +158,7 @@ namespace Shop.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid?>("CartId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -211,7 +211,8 @@ namespace Shop.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CartId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -233,12 +234,9 @@ namespace Shop.Migrations
                     b.Property<double>("TotalSum")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Cart");
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("Shop.Models.Order", b =>
@@ -259,15 +257,12 @@ namespace Shop.Migrations
                     b.Property<double>("TotalSum")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserId1")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -285,6 +280,9 @@ namespace Shop.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PhoneId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -351,9 +349,7 @@ namespace Shop.Migrations
                 {
                     b.HasOne("Shop.Models.Cart", "Cart")
                         .WithOne("User")
-                        .HasForeignKey("Shop.Authentication.ApplicationUser", "CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Shop.Authentication.ApplicationUser", "CartId");
 
                     b.Navigation("Cart");
                 });
@@ -362,7 +358,7 @@ namespace Shop.Migrations
                 {
                     b.HasOne("Shop.Authentication.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId1");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

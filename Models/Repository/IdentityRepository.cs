@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Shop.Models.Repository
 {
-    public class IdentyRepository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class IdentityRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         ApplicationDbContext db;
 
         DbSet<TEntity> entities;
 
-        public IdentyRepository(ApplicationDbContext applicationDbContext)
+        public IdentityRepository(ApplicationDbContext applicationDbContext)
         {
             db = applicationDbContext;
 
@@ -28,6 +28,13 @@ namespace Shop.Models.Repository
         }
 
         public void Delete(Guid id)
+        {
+            entities.Remove(entities.Find(id));
+
+            db.SaveChanges();
+        }
+
+        public void Delete(string id)
         {
             entities.Remove(entities.Find(id));
 
@@ -52,11 +59,36 @@ namespace Shop.Models.Repository
             return entities.Find(id);
         }
 
+        public TEntity GetForId(string id)
+        {
+            return entities.Find(id);
+        }
+
         public async Task Update(TEntity entity, Guid id)
         {
             Delete(id);
 
             Create(entity);
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task Update(TEntity entity, string id)
+        {
+            entities.Remove(entities.Find(id));
+
+            db.SaveChanges();
+
+            entities.Add(entity);
+
+            db.SaveChanges();
+
+            await db.SaveChangesAsync();
+        }
+
+        public async Task Update(TEntity entity)
+        {
+            db.Update(entity);
 
             await db.SaveChangesAsync();
         }

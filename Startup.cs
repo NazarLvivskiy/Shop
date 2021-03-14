@@ -29,6 +29,7 @@ namespace Shop
         {
             //In
             services.AddScoped(typeof(IRepository<>), typeof(EFRepository<>));
+            services.AddScoped(typeof(IdentityRepository<>));
 
             string connection = Configuration.GetConnectionString("MSSQL");
 

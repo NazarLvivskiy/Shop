@@ -13,7 +13,7 @@ namespace Shop.Models
 
         public List<Product> Products { get; set; }
 
-        public Guid? UserId { get; set; }
+        public string UserId { get; set; }
 
         [JsonIgnore]
         public ApplicationUser User { get; set; }

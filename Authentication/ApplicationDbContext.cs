@@ -12,6 +12,8 @@ namespace Shop.Authentication
     {
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             

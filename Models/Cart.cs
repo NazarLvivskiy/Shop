@@ -1,4 +1,5 @@
-﻿using Shop.Authentication;
+﻿using Microsoft.EntityFrameworkCore;
+using Shop.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,6 @@ namespace Shop.Models
     public class Cart
     {
         public Guid Id { get; set; }
-
-        public Guid UserId { get; set; }
 
         [JsonIgnore]
         public ApplicationUser User { get; set; }
